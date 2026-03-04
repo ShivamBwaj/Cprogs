@@ -24,9 +24,9 @@ int size(struct Deque *dq) {
     return dq->count;
 }
 
-void pushFront(struct Deque *dq, int songID) {
+void pushFront(struct Deque *dq, int value) {
     struct Node *newNode = malloc(sizeof(struct Node));
-    newNode->data = songID;
+    newNode->data = value;
 
     if (isEmpty(dq)) {
         newNode->next = newNode;
@@ -38,8 +38,8 @@ void pushFront(struct Deque *dq, int songID) {
     dq->count++;
 }
 
-void pushRear(struct Deque *dq, int songID) {
-    pushFront(dq, songID);
+void pushRear(struct Deque *dq, int value) {
+    pushFront(dq, value);
     dq->tail = dq->tail->next;
 }
 
@@ -93,20 +93,107 @@ int peekRear(struct Deque *dq) {
     return isEmpty(dq) ? -1 : dq->tail->data;
 }
 
+void display(struct Deque *dq) {
+    if (isEmpty(dq)) {
+        printf("Deque is empty.\n");
+        return;
+    }
+
+    struct Node *temp = dq->tail->next;
+    printf("Deque elements: ");
+
+    do {
+        printf("%d ", temp->data);
+        temp = temp->next;
+    } while (temp != dq->tail->next);
+
+    printf("\n");
+}
+
+/* ---------- MAIN ---------- */
 
 int main() {
     struct Deque dq;
     initDeque(&dq);
 
-    pushFront(&dq, 101);
-    pushRear(&dq, 102);
-    pushFront(&dq, 103);
+    int choice, value;
 
-    printf("Front: %d\n", peekFront(&dq));
-    printf("Rear: %d\n", peekRear(&dq));
-    printf("Removed Front: %d\n", popFront(&dq));
-    printf("Removed Rear: %d\n", popRear(&dq));
-    printf("Size: %d\n", size(&dq));
+    while (1) {
+        printf("\n===== CIRCULAR DEQUE MENU =====\n");
+        printf("1. Push Front\n");
+        printf("2. Push Rear\n");
+        printf("3. Pop Front\n");
+        printf("4. Pop Rear\n");
+        printf("5. Peek Front\n");
+        printf("6. Peek Rear\n");
+        printf("7. Display\n");
+        printf("8. Size\n");
+        printf("9. Exit\n");
+        printf("Enter choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+
+            case 1:
+                printf("Enter value: ");
+                scanf("%d", &value);
+                pushFront(&dq, value);
+                break;
+
+            case 2:
+                printf("Enter value: ");
+                scanf("%d", &value);
+                pushRear(&dq, value);
+                break;
+
+            case 3:
+                value = popFront(&dq);
+                if (value == -1)
+                    printf("Deque Underflow!\n");
+                else
+                    printf("Removed from front: %d\n", value);
+                break;
+
+            case 4:
+                value = popRear(&dq);
+                if (value == -1)
+                    printf("Deque Underflow!\n");
+                else
+                    printf("Removed from rear: %d\n", value);
+                break;
+
+            case 5:
+                value = peekFront(&dq);
+                if (value == -1)
+                    printf("Deque is empty!\n");
+                else
+                    printf("Front element: %d\n", value);
+                break;
+
+            case 6:
+                value = peekRear(&dq);
+                if (value == -1)
+                    printf("Deque is empty!\n");
+                else
+                    printf("Rear element: %d\n", value);
+                break;
+
+            case 7:
+                display(&dq);
+                break;
+
+            case 8:
+                printf("Size of deque: %d\n", size(&dq));
+                break;
+
+            case 9:
+                printf("Exiting program...\n");
+                exit(0);
+
+            default:
+                printf("Invalid choice!\n");
+        }
+    }
 
     return 0;
 }
